@@ -78,9 +78,16 @@ CONFIGURE_VARS += \
 	BUILD_CC="$(HOSTCC)" \
 	TARGET_CC="$(TARGET_CC)"
 
+# 全局条件判断：仅当 ARCH 不为 i386 时执行编译
+ifneq ($(ARCH),i386)
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) DESTDIR="$(PKG_INSTALL_DIR)" all install
+    $(MAKE) -C $(PKG_BUILD_DIR) DESTDIR="$(PKG_INSTALL_DIR)" all install
 endef
+else
+define Build/Compile
+    @echo "Skipping compilation for i386"
+endef
+endif
 
 define Package/kexec-tools/install
 	:
